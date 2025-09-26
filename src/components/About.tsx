@@ -23,13 +23,18 @@ export default function About() {
       name: "Vikas Prasad", 
       role: "Lead Developer",
       avatar: "", 
-      github: "https://github.com/VikasPrasad11", 
+      github: "https://github.com/vikasPrasad05", 
       contributions: ["Data Management", "Analytics", "Performance Optimization"]
     }
   ];
 
   const copyUPI = () => {
-    navigator.clipboard.writeText("yourname@paytm"); // Replace with your actual UPI ID
+    navigator.clipboard.writeText("alokmahapatra2604@oksbi"); 
+    alert("UPI ID copied to clipboard!");
+  };
+
+  const copyUPII = () => {
+    navigator.clipboard.writeText("7383149649@ybl"); 
     alert("UPI ID copied to clipboard!");
   };
 
@@ -135,7 +140,12 @@ export default function About() {
               <p className="text-sm font-medium mb-2">UPI Payment Details:</p>
               <div className="flex items-center justify-between bg-white p-2 rounded border">
                 <code className="text-sm">alokmahapatra2604@oksbi</code>
+                
                 <Button size="sm" variant="outline" onClick={copyUPI}>
+                  Copy
+                </Button>
+                <code className="text-sm">7383149649@ybl</code>
+                <Button size="sm" variant="outline" onClick={copyUPII}>
                   Copy
                 </Button>
               </div>
