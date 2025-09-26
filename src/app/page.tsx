@@ -13,6 +13,7 @@ import AddIncome from '@/components/AddIncome';
 import { Plus, TrendingUp, TrendingDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import About from '@/components/About';
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState('dashboard');
@@ -74,6 +75,8 @@ export default function Home() {
 
         {activeTab === 'analytics' && <Analytics />}
         {activeTab === 'settings' && <Settings />}
+        {activeTab === 'about' && <About />}
+
 
         {/* Floating Action Button with Menu */}
         <div className="fixed bottom-20 right-4 z-50">

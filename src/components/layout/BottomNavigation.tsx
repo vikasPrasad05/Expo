@@ -1,6 +1,6 @@
 'use client';
 
-import { Home, ArrowUpDown, BarChart3, Settings } from 'lucide-react';
+import { Home, ArrowUpDown, BarChart3, Settings,Smile } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 interface BottomNavigationProps {
@@ -14,6 +14,7 @@ export default function BottomNavigation({ activeTab, setActiveTab }: BottomNavi
     { id: 'transactions', label: 'Transactions', icon: ArrowUpDown },
     { id: 'analytics', label: 'Analytics', icon: BarChart3 },
     { id: 'settings', label: 'Settings', icon: Settings },
+    { id: 'about', label: 'About', icon: Smile },
   ];
 
   return (

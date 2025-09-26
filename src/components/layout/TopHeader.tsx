@@ -11,7 +11,7 @@ export default function TopHeader() {
     <header className="bg-white border-b border-gray-100 p-4 sticky top-0 z-40">
       <div className="flex items-center justify-between">
         <Button variant="ghost" size="icon">
-          <h2 className='text-xl ml-4 font-bold'>EXPO</h2>
+          <h2 className='text-xl ml-12 font-bold'>EXPOGER</h2>
         </Button>
         
         <div className="text-center">
