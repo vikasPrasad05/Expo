@@ -263,7 +263,7 @@ export default function AddExpense({ open, onClose, expense }: AddExpenseProps) 
 
           {/* Essential Toggle */}
           <div className="flex items-center justify-between">
-            <Label htmlFor="essential">Mark as Essential</Label>
+            <Label htmlFor="essential">Mark AS Essential</Label>
             <Switch
               id="essential"
               checked={formData.isEssential}
