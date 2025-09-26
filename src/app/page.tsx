@@ -1,103 +1,153 @@
-import Image from "next/image";
+'use client';
+
+import { useState, useEffect } from 'react';
+import { ExpenseProvider } from '@/contexts/ExpenseContext';
+import MobileLayout from '@/components/layout/MobileLayout';
+import Dashboard from '@/components/Dashboard';
+import ExpenseList from '@/components/ExpenseList';
+import IncomeList from '@/components/IncomeList';
+import Analytics from '@/components/Analytics';
+import Settings from '@/components/Settings';
+import AddExpense from '@/components/AddExpense';
+import AddIncome from '@/components/AddIncome';
+import { Plus, TrendingUp, TrendingDown } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 export default function Home() {
-  return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const [activeTab, setActiveTab] = useState('dashboard');
+  const [showAddExpense, setShowAddExpense] = useState(false);
+  const [showAddIncome, setShowAddIncome] = useState(false);
+  const [transactionTab, setTransactionTab] = useState('expenses');
+  const [fabMenuOpen, setFabMenuOpen] = useState(false);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+  // Close FAB menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = () => {
+      setFabMenuOpen(false);
+    };
+
+    if (fabMenuOpen) {
+      document.addEventListener('click', handleClickOutside);
+      return () => document.removeEventListener('click', handleClickOutside);
+    }
+  }, [fabMenuOpen]);
+
+  const handleFabClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setFabMenuOpen(!fabMenuOpen);
+  };
+
+  const handleIncomeClick = () => {
+    setShowAddIncome(true);
+    setFabMenuOpen(false);
+  };
+
+  const handleExpenseClick = () => {
+    setShowAddExpense(true);
+    setFabMenuOpen(false);
+  };
+
+  return (
+    <ExpenseProvider>
+      <MobileLayout activeTab={activeTab} setActiveTab={setActiveTab}>
+        {activeTab === 'dashboard' && <Dashboard />}
+
+        {activeTab === 'transactions' && (
+          <div className="space-y-4">
+            <Tabs value={transactionTab} onValueChange={setTransactionTab}>
+              <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger value="expenses">Expenses</TabsTrigger>
+                <TabsTrigger value="income">Income</TabsTrigger>
+              </TabsList>
+
+              <TabsContent value="expenses">
+                <ExpenseList />
+              </TabsContent>
+
+              <TabsContent value="income">
+                <IncomeList />
+              </TabsContent>
+            </Tabs>
+          </div>
+        )}
+
+        {activeTab === 'analytics' && <Analytics />}
+        {activeTab === 'settings' && <Settings />}
+
+        {/* Floating Action Button with Menu */}
+        <div className="fixed bottom-20 right-4 z-50">
+          {/* Menu Items - appear when fabMenuOpen is true */}
+          <div className={`flex flex-col gap-3 mb-3 transition-all duration-300 ${fabMenuOpen ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'
+            }`}>
+            {/* Add Income Button */}
+            <div className="flex items-center gap-3">
+              <span className={`bg-white px-3 py-1 rounded-full text-sm font-medium shadow-lg transition-all duration-300 ${fabMenuOpen ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-4'
+                }`}>
+                Add Income
+              </span>
+              <Button
+                onClick={handleIncomeClick}
+                className="h-12 w-12 rounded-full bg-green-600 hover:bg-green-700 text-white shadow-lg transition-all duration-300 hover:scale-110"
+                size="icon"
+                style={{
+                  transitionDelay: fabMenuOpen ? '100ms' : '0ms'
+                }}
+              >
+                <TrendingUp className="h-5 w-5" />
+              </Button>
+            </div>
+
+            {/* Add Expense Button */}
+            <div className="flex items-center gap-3">
+              <span className={`bg-white px-3 py-1 rounded-full text-sm font-medium shadow-lg transition-all duration-300 ${fabMenuOpen ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-4'
+                }`}>
+                Add Expense
+              </span>
+              <Button
+                onClick={handleExpenseClick}
+                className="h-12 w-12 rounded-full bg-red-600 hover:bg-red-700 text-white shadow-lg transition-all duration-300 hover:scale-110"
+                size="icon"
+                style={{
+                  transitionDelay: fabMenuOpen ? '50ms' : '0ms'
+                }}
+              >
+                <TrendingDown className="h-5 w-5" />
+              </Button>
+            </div>
+          </div>
+
+          {/* Main FAB Button */}
+          <Button
+            onClick={handleFabClick}
+            className={`h-14 w-14 rounded-full flat-button shadow-lg transition-all duration-300 ${fabMenuOpen ? 'rotate-45' : 'rotate-0'
+              } hover:scale-110`}
+            size="icon"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+            <Plus className="h-10 w-10" />
+          </Button>
+
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
+
+        {/* Backdrop overlay when menu is open */}
+        {/* {fabMenuOpen && (
+          <div className="fixed inset-0 bg-black bg-opacity-20 z-40 transition-opacity duration-300" />
+        )} */}
+
+        {showAddExpense && (
+          <AddExpense
+            open={showAddExpense}
+            onClose={() => setShowAddExpense(false)}
           />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
+        )}
+
+        {showAddIncome && (
+          <AddIncome
+            open={showAddIncome}
+            onClose={() => setShowAddIncome(false)}
           />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+        )}
+      </MobileLayout>
+    </ExpenseProvider>
   );
 }
